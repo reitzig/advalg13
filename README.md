@@ -1,7 +1,7 @@
-Advanced Algorithmics 2013 – Hands-on
+Advanced Algorithmics 2015 – Hands-on
 ========
 
-This repository is for contributions to the hands-on exercises of the summer 2013 run of our Advanced Algorithmics course.
+This repository is for contributions to the hands-on exercises of the summer 2015 run of our Advanced Algorithmics course.
 These are the scenarios we investigate:
 
 ### Zombies in Kaiserslautern
@@ -40,4 +40,4 @@ Our roadmap is to
  2. find algorithms in literature that follow the paradigms presented in class and
  3. implement them, comparing performance on artifical and real data.
 
-Find more information on the [course website](http://wwwagak.cs.uni-kl.de/Vorlesung/advanced-algorithmics.html).
+Find more information on the [course website](http://wwwagak.cs.uni-kl.de/Vorlesung/advanced-algorithmics-2015.html).
