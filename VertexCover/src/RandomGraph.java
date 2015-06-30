@@ -39,7 +39,7 @@ public class RandomGraph extends Graph{
 		
 		for(int i=0; i<size; i++){
 			for(int j=0; j<i; j++){
-				if(r.nextDouble() >= 0.5){
+				if(r.nextDouble() >= 0.7){
 					adjm[i][j] = 1;
 				}else{
 					adjm[i][j] = 0;

@@ -8,6 +8,7 @@ public class VCDBS {
 	
 	private ArrayList<Vertex> vc = new ArrayList<Vertex>();
 	
+	//main method to solve if VC of maximal size k exists
 	boolean solve(Graph g, Integer k){
 		if(k <= 0){
 			if(k == 0 && g.edges.isEmpty()){
@@ -327,14 +328,14 @@ public class VCDBS {
 				x = v;
 			}
 		}
-		//1. Case
+		//1. Case  a and b connected
 		if(x.adj().get(0).adj().contains(x.adj().get(1))){
 			return p4c1(g,k,x);
 		}
-		//2. Case
+		//2. Case a and b have a common neighbor different from x
 		if(x.adj().get(0).deg() == 2 && 2 == x.adj().get(1).deg()){
 			for(Vertex w: x.adj().get(0).adj()){
-				if(x.adj().get(1).adj().contains(w)){
+				if(x.adj().get(1).adj().contains(w) && !w.equals(x)){
 					return p4c2(g,k,x,w);
 				}
 			}
@@ -571,28 +572,37 @@ public class VCDBS {
 			}
 		}
 		//1. Case x part of triangle 
-		for(Vertex v: x.adj()){ //TODO NUllpointer ausmerzen???
+		for(Vertex v: x.adj()){
 			for(Vertex w: v.adj()){
-				if(w.equals(x)){
-					Vertex c = null; 
-					for(Vertex y: x.adj()){
-						if(!y.equals(v) && !y.equals(w)){
-							c = y;
+				if(!w.equals(x)){//not necessary, because it cannot occur in a triangle
+					for(Vertex u: w.adj()){
+						if(u.equals(x)){
+							//Find c not part of triangle
+							Vertex c = null; 
+							for(Vertex y: x.adj()){
+								if(!y.equals(v) && !y.equals(w)){
+									c = y;
+								}
+							}
+							//System.out.println("c1");
+							return p5c1(g, k, x, c);
 						}
 					}
-					//System.out.println("c1");
-					return p5c1(g, k, x, c);
 				}
 			}
 		}
 		//2. Case x part of a 4 cycle
 		for(Vertex v: x.adj()){
 			for(Vertex w: v.adj()){
-				for(Vertex y: w.adj()){
-					for(Vertex u: y.adj()){
-						if(u.equals(x)){
-							//System.out.println("c2");
-							return p5c2(g, k, x, w);
+				if(!w.equals(x)){ //check if we dont go back and forth
+					for(Vertex y: w.adj()){
+						if(!y.equals(v)){ //check if we dont go back and forth
+							for(Vertex u: y.adj()){
+								if(u.equals(x)){
+									//System.out.println("c2");
+									return p5c2(g, k, x, w);
+								}
+							}
 						}
 					}
 				}
@@ -1092,7 +1102,9 @@ public class VCDBS {
 
 	
 	public static void main(String[] args){
-		Graph[] gs = new Graph[100];
+		Graph[] gs = new Graph[1];
+		int graphsize = 100;
+		int k = 99;
 		
 		
 		//###############VCDBS#########################
@@ -1101,11 +1113,11 @@ public class VCDBS {
 		ArrayList<Boolean> ergs1 = new ArrayList<Boolean>();
 		
 		for(int i = 0; i < gs.length; i++){
-			Graph g = new RandomGraph(100);
+			Graph g = new RandomGraph(graphsize);
 			gs[i] = g;
 //			Graph g = gs[i];
 //			print(g);
-			boolean erg1 = vcdbs.solve(g,90);
+			boolean erg1 = vcdbs.solve(g,k);
 			ergs1.add(erg1);
 		}
 			
@@ -1128,11 +1140,11 @@ public class VCDBS {
 		
 		VCBF vcbf = new VCBF();
 		ArrayList<Boolean> ergs2 = new ArrayList<Boolean>();
-		for(int i = 0; i < 100; i++){
+		for(int i = 0; i < gs.length; i++){
 //			Graph g = new RandomGraph(12);
 //			gs[i] = g;
 			Graph g = gs[i];
-			boolean erg2 = vcbf.solve(g,7);
+			boolean erg2 = vcbf.solve(g,k);
 			ergs2.add(erg2);
 		}
 		
@@ -1148,7 +1160,33 @@ public class VCDBS {
 		long endtime2 = System.currentTimeMillis();
 		System.out.println(yes2 + "|" + no2 + " in " + (endtime2 - starttime2) + " mS");
 		
+		
+		//#####################VCBF2#######################
+		long starttime3 = System.currentTimeMillis();
+		
+		VCBF vcbf2 = new VCBF();
+		ArrayList<Boolean> ergs3 = new ArrayList<Boolean>();
+		for(int i = 0; i < gs.length; i++){
+//					Graph g = new RandomGraph(12);
+//					gs[i] = g;
+			Graph g = gs[i];
+			boolean erg3 = vcbf2.solve2(g,k);
+			ergs3.add(erg3);
+		}
+		
+		int yes3 = 0;
+		int no3 = 0;
+		for(Boolean b: ergs3){
+			if(b){
+				yes3++;
+			}else{
+				no3++;
+			}
+		}
+		long endtime3 = System.currentTimeMillis();
+		System.out.println(yes3 + "|" + no3 + " in " + (endtime3 - starttime3) + " mS");
 		*/
+		
 	}
 	
 	private static void print(Graph g) {
