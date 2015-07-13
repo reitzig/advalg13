@@ -4,9 +4,15 @@ import java.util.ArrayList;
 public class Vertex {
 	
 	public ArrayList<Edge> inc;
+	public boolean visited = false;
 
 	public Vertex(){
 		inc = new ArrayList<Edge>();
+	}
+	
+	public Vertex(boolean visited){
+		inc = new ArrayList<Edge>();
+		this.visited = visited;
 	}
 	
 	//erstellen der Adjazenzliste aufgrund der Inzidenzliste
