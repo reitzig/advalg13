@@ -52,17 +52,27 @@ public class VCviaDFS {
 
 	
 	public static void main(String[] args){
-		VCviaDFS solver = new VCviaDFS();
 		Graph g = new RandomGraph(100);
+		//VC via DFS
+		VCviaDFS solver = new VCviaDFS();
 		int r = solver.solve(g);
 		System.out.println(r);
 		
+		g.reset();
+		
+		//VC via BFSs
+		VCviaBFS solver2 = new VCviaBFS();
+		int r2 = solver2.solve(g);
+		System.out.println(r2);
+		
+		
 		VCDBS vcdbs = new VCDBS();
-		for(int k = 0; k<100; k++){
-			if(vcdbs.solve(g, k)){
-				System.out.println(k);
-				break;
-			}
-		}
+//		for(int k = 0; k<100; k++){
+//			if(vcdbs.solve(g, k)){
+//				System.out.println(k);
+//				break;
+//			}
+//		}
+		System.out.println(vcdbs.solve(g, r2));
 	}
 }

@@ -5,6 +5,7 @@ public class Vertex {
 	
 	public ArrayList<Edge> inc;
 	public boolean visited = false;
+	public int dist = 0;
 
 	public Vertex(){
 		inc = new ArrayList<Edge>();

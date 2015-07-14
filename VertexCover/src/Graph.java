@@ -74,5 +74,13 @@ public class Graph {
 		}
 		return verts;
 	}
+
+	public void reset() {
+		for(Vertex v: vertices){
+			v.dist = 0;
+			v.visited = false;
+		}
+		
+	}
 	
 }
