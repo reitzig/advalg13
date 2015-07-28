@@ -1,6 +1,11 @@
+package VCAlgs;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Stack;
+
+import Graphs.Graph;
+import Graphs.RandomGraph;
+import Graphs.Vertex;
 
 
 
@@ -13,6 +18,7 @@ public class VCviaDFS {
 		verts = g.copyVertices();
 		s.push(verts.get(0));
 		ArrayList<Vertex> res = computeDFS(g);
+		g.reset();
 		return res.size();
 	}
 	

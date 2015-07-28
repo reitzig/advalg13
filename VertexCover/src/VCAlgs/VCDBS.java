@@ -1,7 +1,14 @@
+package VCAlgs;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Random;
+import java.util.LinkedList;
+
+import DataWriter.CSVWriter;
+import Graphs.Edge;
+import Graphs.Graph;
+import Graphs.RandomGraph;
+import Graphs.Vertex;
 
 
 public class VCDBS {
@@ -9,15 +16,15 @@ public class VCDBS {
 	private ArrayList<Vertex> vc = new ArrayList<Vertex>();
 	
 	//main method to solve if VC of maximal size k exists
-	boolean solve(Graph g, Integer k){
+	public boolean solve(Graph g, Integer k){
 		if(k <= 0){
-			if(k == 0 && g.edges.isEmpty()){
+			if(k == 0 && g.getEdges().isEmpty()){
 				return true;
 			}
 			//System.out.println("k decreased under or to 0");
 			return false;
 		}
-		if(k >= g.vertices.size() || k>= g.edges.size()){
+		if(k >= g.getVertices().size() || k>= g.getEdges().size()){
 			//System.out.println("k >= g");
 			return true;
 		}
@@ -51,7 +58,7 @@ public class VCDBS {
 
 	private boolean c1(Graph g, Integer k) {
 		/* find node with degree one*/
-		for(Vertex v: g.vertices){
+		for(Vertex v: g.getVertices()){
 			if(v.deg() == 1){
 				return true;
 			}
@@ -61,7 +68,7 @@ public class VCDBS {
 	
 	private boolean c2(Graph g, Integer k) {
 		/*find vertex with deg() >= 5 */
-		for(Vertex v: g.vertices){
+		for(Vertex v: g.getVertices()){
 			if(v.deg() >= 5){
 				return true;
 			}
@@ -73,13 +80,13 @@ public class VCDBS {
 		/*look if g is regular*/
 		boolean erg = true;
 		int deg = -1;
-		for(Vertex v: g.vertices){
+		for(Vertex v: g.getVertices()){
 			if(v.deg() != 0){
 				deg = v.deg();
 				break;
 			}
 		}
-		for(Vertex v: g.vertices){
+		for(Vertex v: g.getVertices()){
 			if(v.deg() != deg && v.deg() != 0){
 				erg = false;
 			}
@@ -89,7 +96,7 @@ public class VCDBS {
 
 	private boolean c4(Graph g, Integer k) {
 		/*If there is no node with deg = 1 or >5 but one with deg = 2 then do case distinction */
-		for(Vertex v: g.vertices){
+		for(Vertex v: g.getVertices()){
 			if(v.deg() == 2){
 				return true;
 			}
@@ -99,7 +106,7 @@ public class VCDBS {
 	
 	private boolean c5(Graph g, Integer k) {
 		/*if node with deg =3*/
-		for(Vertex v: g.vertices){
+		for(Vertex v: g.getVertices()){
 			if(v.deg() == 3){
 				return true;
 			}
@@ -112,7 +119,7 @@ public class VCDBS {
 		boolean erg = false;
 		Vertex x = null;
 		Vertex v = null;
-		for(Vertex w: g.vertices){
+		for(Vertex w: g.getVertices()){
 			if(w.deg() == 1){
 				x = w;
 				v = w.adj().get(0);
@@ -157,7 +164,7 @@ public class VCDBS {
 		boolean erg = false;
 		ArrayList<Vertex> xadj = new ArrayList<Vertex>();
 		Vertex x = null;
-		for(Vertex v: g.vertices){
+		for(Vertex v: g.getVertices()){
 			if(v.deg() >= 5){
 				x = v;
 			}
@@ -241,7 +248,7 @@ public class VCDBS {
 		boolean erg = false;
 		ArrayList<Vertex> xadj = new ArrayList<Vertex>();
 		Vertex x = null;
-		for(Vertex v: g.vertices){
+		for(Vertex v: g.getVertices()){
 			if(v.deg() != 0){
 				x = v;
 			}
@@ -323,7 +330,7 @@ public class VCDBS {
 	private boolean p4(Graph g, Integer k) {
 		// Do case distinction for a not regular graph without nodes of degree 1 or >5 but with a degree 2 node
 		Vertex x = null;
-		for(Vertex v: g.vertices){
+		for(Vertex v: g.getVertices()){
 			if (v.deg() == 2){
 				x = v;
 			}
@@ -544,7 +551,7 @@ public class VCDBS {
 			}
 			for(Vertex v: bN.keySet()){
 				g.addEdge(new Edge(b, v));
-				if(!g.vertices.contains(v) && !v.equals(a)){//and here
+				if(!g.getVertices().contains(v) && !v.equals(a)){//and here
 					g.addVertex(v);
 				}
 				for(Vertex w: bN.get(v)){
@@ -566,7 +573,7 @@ public class VCDBS {
 		//System.out.println("p5");
 		// Do case distinction for a not regular graph without nodes of degree 1 or >5 but with a degree 3 node
 		Vertex x = null;
-		for(Vertex v: g.vertices){
+		for(Vertex v: g.getVertices()){
 			if (v.deg() == 3){
 				x = v;
 			}
@@ -953,7 +960,7 @@ public class VCDBS {
 			g.addVertex(c);
 			for(Vertex v: cN.keySet()){
 //				g.addEdge(new Edge(c,v));
-				if(!g.vertices.contains(v)){
+				if(!g.getVertices().contains(v)){
 					g.addVertex(v);
 				}
 				for(Vertex w: cN.get(v)){
@@ -962,7 +969,7 @@ public class VCDBS {
 			}
 			for(Vertex v: bN.keySet()){
 //				g.addEdge(new Edge(b,v));
-				if(!g.vertices.contains(v)){
+				if(!g.getVertices().contains(v)){
 					g.addVertex(v);
 				}
 				for(Vertex w: bN.get(v)){
@@ -990,7 +997,7 @@ public class VCDBS {
 		/*take arbitrary vertex and branch between itself and its neighborhood*/
 		boolean erg = false;
 		ArrayList<Vertex> xadj = new ArrayList<Vertex>();
-		Vertex x = g.vertices.get(0);
+		Vertex x = g.getVertices().get(0);
 		
 		//branch to x and set VC
 		vc.add(x);
@@ -1102,14 +1109,16 @@ public class VCDBS {
 
 	
 	public static void main(String[] args){
-		Graph[] gs = new Graph[1];
-		int graphsize = 100;
+		Integer numberOfGraphs = 100;
+		Integer graphsize = 100;
 		int k = 99;
-		
-		
+
 		//###############VCDBS#########################
-		long starttime = System.currentTimeMillis();
 		VCDBS vcdbs = new VCDBS();
+		Graph[] gs = new Graph[numberOfGraphs];
+		
+		
+		Long starttime = System.currentTimeMillis();
 		ArrayList<Boolean> ergs1 = new ArrayList<Boolean>();
 		
 		for(int i = 0; i < gs.length; i++){
@@ -1131,7 +1140,7 @@ public class VCDBS {
 			}
 		}
 		
-		long endtime = System.currentTimeMillis();
+		Long endtime = System.currentTimeMillis();
 		
 		System.out.println(yes1 + "|" + no1 + " in " + (endtime - starttime) + " mS");
 		/*
@@ -1191,13 +1200,13 @@ public class VCDBS {
 	
 	private static void print(Graph g) {
 		int x = 0;
-		for(Vertex v: g.vertices){
+		for(Vertex v: g.getVertices()){
 			System.out.println(x);
 			x++;
 		}
-		for(Edge e: g.edges){
-			int v = g.vertices.indexOf(e.v);
-			int w = g.vertices.indexOf(e.w);
+		for(Edge e: g.getEdges()){
+			int v = g.getVertices().indexOf(e.v);
+			int w = g.getVertices().indexOf(e.w);
 			System.out.println(v + "-" + w);
 		}
 		

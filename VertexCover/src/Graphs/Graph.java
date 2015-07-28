@@ -1,14 +1,15 @@
+package Graphs;
 import java.util.ArrayList;
 
 
 public class Graph {
 
-	ArrayList<Vertex> vertices;
-	ArrayList<Edge> edges;
+	private ArrayList<Vertex> vertices;
+	private ArrayList<Edge> edges;
 	
 	public Graph(){
-		vertices = new ArrayList<Vertex>();
-		edges = new ArrayList<Edge>();
+		setVertices(new ArrayList<Vertex>());
+		setEdges(new ArrayList<Edge>());
 	}
 	
 	public Graph(int size){
@@ -18,15 +19,15 @@ public class Graph {
 	}
 		
 	public Graph(ArrayList<Vertex> vertices, ArrayList<Edge> edges){
-		this.vertices = vertices;
-		this.edges = edges;
+		this.setVertices(vertices);
+		this.setEdges(edges);
 	}
 	
 	
 	public void addEdge(Edge e){
 		//check whether it's already there
 		boolean check = true;
-		for(Edge ed: edges){
+		for(Edge ed: getEdges()){
 			if(ed.v.equals(e.v) && ed.w.equals(e.w)){
 				check = false;
 			}
@@ -35,24 +36,24 @@ public class Graph {
 			}
 		}
 		if(check){
-			edges.add(e);
+			getEdges().add(e);
 			e.v.inc.add(e);
 			e.w.inc.add(e);
 		}
 	}
 	
 	public void removeEdge(Edge e){
-		edges.remove(e);
+		getEdges().remove(e);
 		e.v.inc.remove(e);
 		e.w.inc.remove(e);
 	}
 	
 	public void addVertex(Vertex v){
-		vertices.add(v);
+		getVertices().add(v);
 	}
 	
 	public void removeVertex(Vertex v){
-		vertices.remove(v);
+		getVertices().remove(v);
 		ArrayList<Edge> inc = copyList(v.inc);
 		for(Edge e: inc){
 			removeEdge(e);
@@ -67,20 +68,36 @@ public class Graph {
 		return inc2;
 	}
 	
-	ArrayList<Vertex> copyVertices(){
+	public ArrayList<Vertex> copyVertices(){
 		ArrayList<Vertex> verts = new ArrayList<Vertex>();
-		for(Vertex v: vertices){
+		for(Vertex v: getVertices()){
 			verts.add(v);
 		}
 		return verts;
 	}
 
 	public void reset() {
-		for(Vertex v: vertices){
+		for(Vertex v: getVertices()){
 			v.dist = 0;
 			v.visited = false;
 		}
 		
+	}
+
+	public ArrayList<Edge> getEdges() {
+		return edges;
+	}
+
+	public void setEdges(ArrayList<Edge> edges) {
+		this.edges = edges;
+	}
+
+	public ArrayList<Vertex> getVertices() {
+		return vertices;
+	}
+
+	public void setVertices(ArrayList<Vertex> vertices) {
+		this.vertices = vertices;
 	}
 	
 }

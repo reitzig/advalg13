@@ -1,3 +1,5 @@
+package Graphs;
+
 
 public class TestGraph extends Graph{
 	public TestGraph(){
@@ -37,15 +39,5 @@ public class TestGraph extends Graph{
 		
 		
 		
-	}
-	
-	public static void main(String[] args){
-//		long starttime = System.currentTimeMillis();
-		VCDBS vcdbs = new VCDBS();
-		VCBF vcbf = new VCBF();
-		TestGraph g = new TestGraph();
-		boolean erg = vcdbs.solve(g,3);
-		boolean erg1 = vcbf.solve(g,3);
-		System.out.println(erg + " " + erg1);
 	}
 }

@@ -1,7 +1,10 @@
+package Graphs;
 import java.util.Random;
 
 
 public class RandomGraph extends Graph{
+	
+	static double edgeProbability = 0.99;
 	
 	public RandomGraph(int size){
 		
@@ -23,7 +26,7 @@ public class RandomGraph extends Graph{
 		for(int i=0; i<adjm.length; i++){
 			for(int j=0; j<i; j++){
 				if(adjm[i][j] == 1){
-					this.addEdge(new Edge(this.vertices.get(i), this.vertices.get(j)));
+					this.addEdge(new Edge(this.getVertices().get(i), this.getVertices().get(j)));
 				}
 			}
 		}
@@ -39,7 +42,7 @@ public class RandomGraph extends Graph{
 		
 		for(int i=0; i<size; i++){
 			for(int j=0; j<i; j++){
-				if(r.nextDouble() >= 0.99){
+				if(r.nextDouble() >= edgeProbability){
 					adjm[i][j] = 1;
 				}else{
 					adjm[i][j] = 0;
@@ -49,5 +52,8 @@ public class RandomGraph extends Graph{
 		return adjm;
 	}
 	
+	public static Double getEdgeProbability(){
+		return edgeProbability;
+	}
 	
 }

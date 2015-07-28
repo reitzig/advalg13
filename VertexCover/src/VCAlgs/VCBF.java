@@ -1,27 +1,33 @@
+package VCAlgs;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import Graphs.Edge;
+import Graphs.Graph;
+import Graphs.RandomGraph;
+import Graphs.Vertex;
 
 
 public class VCBF {
 	
 	public boolean solve(Graph g, Integer k){
 		if(k <= 0){
-			if(k == 0 && g.edges.isEmpty()){
+			if(k == 0 && g.getEdges().isEmpty()){
 				return true;
 			}
 			//System.out.println("k decreased under or to 0");
 			return false;
 		}
-		if(k>=0 && g.edges.isEmpty()){
+		if(k>=0 && g.getEdges().isEmpty()){
 			//System.out.println("g has no more edges");
 			return true;
 		}
-		if(k >= g.vertices.size()){
+		if(k >= g.getVertices().size()){
 			
 			//System.out.println("k >= g");
 			return true;
 		}
-		ArrayList<Vertex> verts = copyList(g.vertices);
+		ArrayList<Vertex> verts = copyList(g.getVertices());
 		for(Vertex v: verts){
 			ArrayList<Vertex> vadj = new ArrayList<Vertex>();
 			for(Vertex w: v.adj()){
@@ -41,24 +47,24 @@ public class VCBF {
 	
 	public boolean solve2(Graph g, Integer k){
 		if(k <= 0){
-			if(k == 0 && g.edges.isEmpty()){
+			if(k == 0 && g.getEdges().isEmpty()){
 				return true;
 			}
 			//System.out.println("k decreased under or to 0");
 			return false;
 		}
-		if(k>=0 && g.edges.isEmpty()){
+		if(k>=0 && g.getEdges().isEmpty()){
 			//System.out.println("g has no more edges");
 			return true;
 		}
-		if(k >= g.vertices.size()){
+		if(k >= g.getVertices().size()){
 			
 			//System.out.println("k >= g");
 			return true;
 		}
 		/*take arbitrary vertex and branch between itself and its neighborhood*/
 		boolean erg = false;
-		ArrayList<Vertex> verts = copyList(g.vertices);
+		ArrayList<Vertex> verts = copyList(g.getVertices());
 		for(Vertex u: verts){
 			ArrayList<Vertex> xadj = new ArrayList<Vertex>();
 			Vertex x = u;
