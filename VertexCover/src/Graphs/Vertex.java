@@ -17,7 +17,7 @@ public class Vertex {
 		this.visited = visited;
 	}
 	
-	//erstellen der Adjazenzliste aufgrund der Inzidenzliste
+	//create adjacency list on the base of incidence list
 	public ArrayList<Vertex> adj(){
 		ArrayList<Vertex> adj = new ArrayList<Vertex>();
 		for(Edge e: inc){
@@ -31,6 +31,7 @@ public class Vertex {
 		return adj;
 	}	
 	
+	// return the degree (being the size of the incidence list)
 	public int deg(){
 		return inc.size();
 	}

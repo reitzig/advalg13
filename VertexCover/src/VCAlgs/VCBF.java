@@ -10,21 +10,25 @@ import Graphs.Vertex;
 
 public class VCBF {
 	
+	/* 
+	 * erase a node (and take it to vc)
+	 * brute force recursively on the remainder of the graph
+	 * do this for every node
+	*/
 	public boolean solve(Graph g, Integer k){
+		//Case: k is less or equal to 0
 		if(k <= 0){
 			if(k == 0 && g.getEdges().isEmpty()){
 				return true;
 			}
-			//System.out.println("k decreased under or to 0");
 			return false;
 		}
+		// Case: G has no more edges to be covered -> VC exists
 		if(k>=0 && g.getEdges().isEmpty()){
-			//System.out.println("g has no more edges");
 			return true;
 		}
+		//Case: k is larger than |V| -> VC exists
 		if(k >= g.getVertices().size()){
-			
-			//System.out.println("k >= g");
 			return true;
 		}
 		ArrayList<Vertex> verts = copyList(g.getVertices());
@@ -45,21 +49,21 @@ public class VCBF {
 		return false;
 	}
 	
+	/*
+	 * take arbitrary node and branch between itself and its neighborhood
+	 * recurse on the remainder of the graph
+	 */
 	public boolean solve2(Graph g, Integer k){
 		if(k <= 0){
 			if(k == 0 && g.getEdges().isEmpty()){
 				return true;
 			}
-			//System.out.println("k decreased under or to 0");
 			return false;
 		}
 		if(k>=0 && g.getEdges().isEmpty()){
-			//System.out.println("g has no more edges");
 			return true;
 		}
 		if(k >= g.getVertices().size()){
-			
-			//System.out.println("k >= g");
 			return true;
 		}
 		/*take arbitrary vertex and branch between itself and its neighborhood*/
@@ -107,14 +111,12 @@ public class VCBF {
 				g.removeVertex(x);
 				
 				//compute VC
-				//System.out.println("2. branch: k = " + (k-xN.size()));
 				erg = solve2(g,k-xN.keySet().size());
 				
 				//restoring g
 				g.addVertex(x);
 				for(Vertex v: xN.keySet()){
 					g.addVertex(v);
-	//				g.addEdge(new Edge(x,v));
 					for(Vertex w: xN.get(v)){
 						g.addEdge(new Edge(v,w));
 					}
@@ -132,14 +134,56 @@ public class VCBF {
 		return verts2;
 	}
 	
+	/*
+	 * runtime comparison between the two brute force approaches
+	 */
 	public static void main(String[] args){
-		long starttime =  System.currentTimeMillis();
+		//Input
+		Integer numberOfGraphs = 10;
+		Integer graphsize = 13;
+		int k = 6;
+
+		//setup
+		Graph[] gs = new Graph[numberOfGraphs];
 		VCBF vcbf = new VCBF();
+		
+		for(int i=0; i < gs.length;i++){
+			Graph g = new RandomGraph(graphsize);
+			gs[i] = g;
+		}
+		
+		
+		
+		long starttime1 =  System.currentTimeMillis();
+		VCBF vcbf1 = new VCBF();
+		ArrayList<Boolean> ergs1 = new ArrayList<Boolean>();
+		
+		for(int i = 0; i < gs.length; i++){
+			Graph g = gs[i];
+			boolean erg1 = vcbf1.solve(g,k);
+			ergs1.add(erg1);
+		}
+			
+		int yes1 = 0;
+		int no1 = 0;
+		for(Boolean b: ergs1){
+			if(b){
+				yes1++;
+			}else{
+				no1++;
+			}
+		}
+		long endtime1 = System.currentTimeMillis();
+		
+		System.out.println(yes1 + "|" + no1 + " in " + (endtime1 - starttime1) + " mS");
+		
+		
+		long starttime =  System.currentTimeMillis();
 		ArrayList<Boolean> ergs = new ArrayList<Boolean>();
 		
-		for(int i = 0; i < 1; i++){
-			Graph g = new RandomGraph(12);
-			boolean erg = vcbf.solve(g,7);
+		for(int i = 0; i < gs.length; i++){
+			Graph g = gs[i];
+			boolean erg = vcbf.solve(g,k);
 			ergs.add(erg);
 		}
 			
@@ -155,5 +199,6 @@ public class VCBF {
 		long endtime = System.currentTimeMillis();
 		
 		System.out.println(yes + "|" + no + " in " + (endtime - starttime) + " mS");
+		
 	}
 }

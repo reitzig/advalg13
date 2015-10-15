@@ -15,7 +15,7 @@ public class VCDBS {
 	
 	private ArrayList<Vertex> vc = new ArrayList<Vertex>();
 	
-	//main method to solve if VC of maximal size k exists
+	//main method to decide whether VC of maximal size k exists
 	public boolean solve(Graph g, Integer k){
 		if(k <= 0){
 			if(k == 0 && g.getEdges().isEmpty()){
@@ -50,7 +50,7 @@ public class VCDBS {
 		}
 		else{
 			System.out.println("Case 6: ...");
-			print(g);
+			g.print();
 			System.exit(0);
 			return p6(g,k);
 		}
@@ -114,8 +114,9 @@ public class VCDBS {
 		return false;
 	}
 
+	
 	private boolean p1(Graph g, Integer k) {
-		/* find node with deg() one and take its neighborhood */
+		/* find node with deg()==1 and take its neighborhood */
 		boolean erg = false;
 		Vertex x = null;
 		Vertex v = null;
@@ -140,15 +141,11 @@ public class VCDBS {
 		g.removeVertex(v);
 		
 		//compute VC
-//		ArrayList<Graph> conComp = getConnectedComponents(g);
-//		for(Graph gcom: conComp){
-//		}
 		erg = solve(g,k-1);
 		
 		//restore G
 		g.addVertex(x);
 		g.addVertex(v);
-//		g.addEdge(new Edge(v, x));
 		for(Vertex w: vadj){
 			g.addEdge(new Edge(v, w));
 		}
@@ -161,6 +158,7 @@ public class VCDBS {
 	}
 
 	private boolean p2(Graph g, Integer k) {
+		/*take node with degree 5 or larger and branch between itself and its neighborhood*/
 		boolean erg = false;
 		ArrayList<Vertex> xadj = new ArrayList<Vertex>();
 		Vertex x = null;
@@ -182,7 +180,6 @@ public class VCDBS {
 		g.removeVertex(x);
 		
 		//compute VC
-		//System.out.println("1. branch");
 		erg = solve(g,k-1);
 		
 		//restoring g
@@ -198,6 +195,7 @@ public class VCDBS {
 		
 		//branch to N(x) if VC still not found
 		if(!erg){
+			//Set VC
 			for(Vertex v: x.adj()){
 				vc.add(v);
 			}
@@ -226,7 +224,6 @@ public class VCDBS {
 			g.addVertex(x);
 			for(Vertex v: xN.keySet()){
 				g.addVertex(v);
-//				g.addEdge(new Edge(x,v));  //causes malfunction
 				for(Vertex w: xN.get(v)){
 					g.addEdge(new Edge(v,w));
 				}
@@ -266,7 +263,6 @@ public class VCDBS {
 		g.removeVertex(x);
 		
 		//compute VC
-		//System.out.println("1. branch: k = " + (k-1));
 		erg = solve(g,k-1);
 		
 		//restoring g
@@ -304,14 +300,12 @@ public class VCDBS {
 			g.removeVertex(x);
 			
 			//compute VC
-			//System.out.println("2. branch: k = " + (k-xN.size()));
 			erg = solve(g,k-xN.keySet().size());
 			
 			//restoring g
 			g.addVertex(x);
 			for(Vertex v: xN.keySet()){
 				g.addVertex(v);
-//				g.addEdge(new Edge(x,v));
 				for(Vertex w: xN.get(v)){
 					g.addEdge(new Edge(v,w));
 				}
@@ -357,7 +351,7 @@ public class VCDBS {
 		bvc.add(x.adj().get(0));
 		bvc.add(x.adj().get(1));
 		
-		//Set VC
+		//Set VC (add a and b)
 		for(Vertex v: bvc){
 			vc.add(v);
 		}
@@ -386,7 +380,6 @@ public class VCDBS {
 		g.addVertex(x);
 		for(Vertex v: N.keySet()){
 			g.addVertex(v);
-//			g.addEdge(new Edge(x,v));
 			for(Vertex w: N.get(v)){
 				g.addEdge(new Edge(v,w));
 			}
@@ -476,7 +469,6 @@ public class VCDBS {
 		g.addVertex(x);
 		for(Vertex v: xN.keySet()){
 			g.addVertex(v);
-//			g.addEdge(new Edge(x,v));
 			for(Vertex w: xN.get(v)){
 				g.addEdge(new Edge(w,v));
 			}
@@ -513,7 +505,6 @@ public class VCDBS {
 			}
 			
 			//Setting VC
-			//a and b have no common neighbor but for being sure its tested
 			ArrayList<Vertex> abN = new ArrayList<Vertex>();
 			for(Vertex v: aN.keySet()){
 				abN.add(v);
@@ -541,17 +532,15 @@ public class VCDBS {
 			g.addVertex(a);
 			g.addVertex(b);
 			for(Vertex v: aN.keySet()){
-				if(!v.equals(b)){ //like here
+				if(!g.getVertices().contains(v)){
 					g.addVertex(v);
 				}
-//				g.addEdge(new Edge(a,v));
 				for(Vertex w: aN.get(v)){
 					g.addEdge(new Edge(v,w));
 				}
 			}
 			for(Vertex v: bN.keySet()){
-				g.addEdge(new Edge(b, v));
-				if(!g.getVertices().contains(v) && !v.equals(a)){//and here
+				if(!g.getVertices().contains(v)){
 					g.addVertex(v);
 				}
 				for(Vertex w: bN.get(v)){
@@ -560,6 +549,7 @@ public class VCDBS {
 					}
 				}
 			}
+			//set VC
 			if(!erg){
 				for(Vertex v: abN){
 					vc.remove(v);
@@ -570,7 +560,6 @@ public class VCDBS {
 	}
 	
 	private boolean p5(Graph g, Integer k) {
-		//System.out.println("p5");
 		// Do case distinction for a not regular graph without nodes of degree 1 or >5 but with a degree 3 node
 		Vertex x = null;
 		for(Vertex v: g.getVertices()){
@@ -591,7 +580,6 @@ public class VCDBS {
 									c = y;
 								}
 							}
-							//System.out.println("c1");
 							return p5c1(g, k, x, c);
 						}
 					}
@@ -606,7 +594,6 @@ public class VCDBS {
 						if(!y.equals(v)){ //check if we dont go back and forth
 							for(Vertex u: y.adj()){
 								if(u.equals(x)){
-									//System.out.println("c2");
 									return p5c2(g, k, x, w);
 								}
 							}
@@ -616,7 +603,6 @@ public class VCDBS {
 			}
 		}
 		//3.Case
-		//System.out.println("c3");
 		return p5c3(g,k,x);
 	}
 
@@ -653,7 +639,6 @@ public class VCDBS {
 		g.addVertex(x);
 		for(Vertex v: xN.keySet()){
 			g.addVertex(v);
-//			g.addEdge(new Edge(x,v));
 			for(Vertex w: xN.get(v)){
 				g.addEdge(new Edge(v,w));
 			}
@@ -697,7 +682,6 @@ public class VCDBS {
 			g.addVertex(c);
 			for(Vertex v: cN.keySet()){
 				g.addVertex(v);
-//				g.addEdge(new Edge(c,v));
 				for(Vertex w: cN.get(v)){
 					g.addEdge(new Edge(v,w));
 				}
@@ -792,8 +776,8 @@ public class VCDBS {
 			//restoring G
 			for(Vertex y: N.keySet()){
 				g.addVertex(y);
-//				g.addEdge(new Edge(v,y));
 				for(Vertex w: N.get(y)){
+					//TODO this edge is added twice because of x and d having 2 same neighbors
 					g.addEdge(new Edge(y,w));
 				}
 			}
@@ -846,8 +830,8 @@ public class VCDBS {
 		g.addVertex(x);
 		for(Vertex v: xN.keySet()){
 			g.addVertex(v);
-//			g.addEdge(new Edge(x,v));
 			for(Vertex w: xN.get(v)){
+				//edge added several times
 				g.addEdge(new Edge(v,w));
 			}
 		}
@@ -890,7 +874,6 @@ public class VCDBS {
 			g.addVertex(a);
 			for(Vertex v: aN.keySet()){
 				g.addVertex(v);
-//				g.addEdge(new Edge(a,v));
 				for(Vertex w: aN.get(v)){
 					g.addEdge(new Edge(v,w));
 				}
@@ -934,11 +917,8 @@ public class VCDBS {
 					cbN.add(v);
 				}
 			}
-//			for(Vertex v: aadj){
-//				if(!cbN.contains(v)){
-//					cbN.add(v);
-//				}
-//			}
+			
+			vc.add(a);
 			for(Vertex v: cbN){
 				vc.add(v);
 			}
@@ -959,7 +939,6 @@ public class VCDBS {
 			g.addVertex(b);
 			g.addVertex(c);
 			for(Vertex v: cN.keySet()){
-//				g.addEdge(new Edge(c,v));
 				if(!g.getVertices().contains(v)){
 					g.addVertex(v);
 				}
@@ -968,7 +947,6 @@ public class VCDBS {
 				}
 			}
 			for(Vertex v: bN.keySet()){
-//				g.addEdge(new Edge(b,v));
 				if(!g.getVertices().contains(v)){
 					g.addVertex(v);
 				}
@@ -988,6 +966,7 @@ public class VCDBS {
 				for(Vertex v: cbN){
 					vc.remove(v);
 				}
+				vc.remove(a);
 			}
 		}
 		return erg;
@@ -1071,6 +1050,10 @@ public class VCDBS {
 		return erg;
 	}
 	
+	/* 
+	 * unnecessary methode while we cannot guess the right parameter k for the components
+	 * to do recursive calls on the components
+	 */
 	private ArrayList<Graph> getConnectedComponents(Graph g){
 		ArrayList<Graph> res = new ArrayList<Graph>();
 		ArrayList<Vertex> notVisited = g.copyVertices();
@@ -1109,9 +1092,9 @@ public class VCDBS {
 
 	
 	public static void main(String[] args){
-		Integer numberOfGraphs = 100;
-		Integer graphsize = 100;
-		int k = 99;
+		Integer numberOfGraphs = 1;
+		Integer graphsize = 300;
+		int k = 245;
 
 		//###############VCDBS#########################
 		VCDBS vcdbs = new VCDBS();
@@ -1198,17 +1181,11 @@ public class VCDBS {
 		
 	}
 	
-	private static void print(Graph g) {
-		int x = 0;
-		for(Vertex v: g.getVertices()){
-			System.out.println(x);
-			x++;
-		}
-		for(Edge e: g.getEdges()){
-			int v = g.getVertices().indexOf(e.v);
-			int w = g.getVertices().indexOf(e.w);
-			System.out.println(v + "-" + w);
-		}
-		
-	}
+	/*
+	 * prints the list of nodes and the adjacency list
+	 * Attention: doing this before algorithm and afterwards
+	 * does not necessarily output the same graph
+	 * as they will only be isomorph
+	 */
+
 }

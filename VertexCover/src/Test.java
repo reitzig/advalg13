@@ -11,18 +11,21 @@ import VCAlgs.VCDBSwithBounding;
 public class Test {
 
 	public static void main(String[] args) {
-		Integer numberOfGraphs = 100;
-		Integer graphSize = 100;
+		Integer numberOfGraphs = 1;
+		Integer graphSize = 130;
 		
 		Graph[] graphs = generateGraphs(numberOfGraphs, graphSize);
 		
-//		int k = 99;
-
 		VCDBS vcdbs = new VCDBS();
 		VCDBSwithBounding vcdbswb = new VCDBSwithBounding();
 		LinkedList<String[]> data = new LinkedList<String[]>();
 		
-		for(int k = graphSize; k > 0; k--){
+		int k = graphSize;
+		boolean vcEx = true;
+		
+		while(vcEx){
+//		for(int k = graphSize; k > 0; k -= 1){
+			
 			//###############VCDBS#########################
 			Long starttime1 = System.currentTimeMillis();
 			ArrayList<Boolean> ergs1 = new ArrayList<Boolean>();
@@ -30,6 +33,7 @@ public class Test {
 			for(int i = 0; i < graphs.length; i++){
 				boolean erg1 = vcdbs.solve(graphs[i],k);
 				ergs1.add(erg1);
+				vcEx = erg1;
 			}
 				
 			int yes1 = 0;
@@ -42,6 +46,26 @@ public class Test {
 				}
 			}
 			Long endtime1 = System.currentTimeMillis();
+			
+			//###############VCDBS-2#########################
+			Long starttime3 = System.currentTimeMillis();
+			ArrayList<Boolean> ergs3 = new ArrayList<Boolean>();
+			
+			for(int i = 0; i < graphs.length; i++){
+				boolean erg3 = vcdbs.solve(graphs[i],k);
+				ergs3.add(erg3);
+			}
+				
+			int yes3 = 0;
+			int no3 = 0;
+			for(Boolean b: ergs3){
+				if(b){
+					yes3++;
+				}else{
+					no3++;
+				}
+			}
+			Long endtime3 = System.currentTimeMillis();
 			
 			//#############VCDBS-with-Bounding################
 			Long starttime2 = System.currentTimeMillis();
@@ -61,18 +85,25 @@ public class Test {
 					no2++;
 				}
 			}
+			
 			Long endtime2 = System.currentTimeMillis();
 			
-			String[] row = {numberOfGraphs.toString(), graphSize.toString(), RandomGraph.getEdgeProbability().toString(), ((Long)(endtime1 - starttime1)).toString(), ((Long)(endtime2 - starttime2)).toString(), yes1 + "|" + no1, k + ""};
+			
+		
+			if(yes2 != yes1 ) throw new RuntimeException();
+			
+			String[] row = {numberOfGraphs.toString(), graphSize.toString(), RandomGraph.getEdgeProbability().toString(), ((Long)(endtime1 - starttime1)).toString(), ((Long)(endtime3 - starttime3)).toString(), ((Long)(endtime2 - starttime2)).toString(), yes1 + "|" + no1, k + ""};
 			data.add(row);
+			
+			k--;
 		}
 		
-		CSVWriter.writeCsvFile("firstrun", data);
+		CSVWriter.writeCsvFile("fifthhrun", data);
 
 	}
 
 	private static Graph[] generateGraphs(int numberOfGraphs, int graphSize) {
-		Graph[] graphs = new Graph[graphSize];
+		Graph[] graphs = new Graph[numberOfGraphs];
 		for(int i = 0; i < graphs.length; i++){
 			Graph g = new RandomGraph(graphSize);
 			graphs[i] = g;

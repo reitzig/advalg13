@@ -83,6 +83,20 @@ public class Graph {
 		}
 		
 	}
+	
+	public void print() {
+		int x = 0;
+		for(Vertex v: getVertices()){
+			System.out.println(x);
+			x++;
+		}
+		for(Edge e: getEdges()){
+			int v = getVertices().indexOf(e.v);
+			int w = getVertices().indexOf(e.w);
+			System.out.println(v + "-" + w);
+		}
+		
+	}
 
 	public ArrayList<Edge> getEdges() {
 		return edges;

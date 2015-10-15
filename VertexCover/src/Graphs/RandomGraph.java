@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class RandomGraph extends Graph{
 	
-	static double edgeProbability = 0.99;
+	static double edgeProbability = 0.05;
 	
 	public RandomGraph(int size){
 		
@@ -34,15 +34,12 @@ public class RandomGraph extends Graph{
 		
 		
 	private int[][] generateRandomGraph(int size){
-//		Random r2 = new Random();
-//		Integer var = r2.nextInt(Integer.MAX_VALUE);
-//		System.out.println(Integer.toHexString(var));
 		Random r = new Random();
 		int[][] adjm = new int[size][size];
 		
 		for(int i=0; i<size; i++){
 			for(int j=0; j<i; j++){
-				if(r.nextDouble() >= edgeProbability){
+				if(r.nextDouble() <= edgeProbability){
 					adjm[i][j] = 1;
 				}else{
 					adjm[i][j] = 0;

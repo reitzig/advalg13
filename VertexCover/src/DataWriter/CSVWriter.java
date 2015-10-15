@@ -12,10 +12,10 @@ public class CSVWriter {
 	
 	//CSV file header
 //	private static final String FILE_HEADER = "numberOfGraphs\tgraphSize\tedgeProbability\tVCDBS-Time (in ms)\tHow many VCs?\tParameter k";
-	private static final String FILE_HEADER = "numberOfGraphs\tgraphSize\tedgeProbability\tVCDBS-Time (in ms)\tVCDBSwithBounding-Time (in ms)\tHow many VCs?\tParameter k";
+//	private static final String FILE_HEADER = "numberOfGraphs\tgraphSize\tedgeProbability\tVCDBS-Time (in ms)\tVCDBSwithBounding-Time (in ms)\tHow many VCs?\tParameter k";
+	private static final String FILE_HEADER = "numberOfGraphs\tgraphSize\tedgeProbability\tVCDBS-Time (in ms)\tVCDBS2-Time (in ms)\tVCDBSwithBounding-Time (in ms)\tHow many VCs?\tParameter k";
 
 	public static void writeCsvFile(String fileName, LinkedList<String[]> data) {
-	//Create new students objects
 					
 		FileWriter fileWriter = null;
 				

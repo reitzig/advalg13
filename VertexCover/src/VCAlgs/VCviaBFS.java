@@ -14,15 +14,18 @@ public class VCviaBFS {
 	ArrayList<Vertex> verts;
 	ArrayList<Vertex> res = new ArrayList<Vertex>();
 	
-	/* the ansatz for DFS does not work for BFS since the leafs in the tree can be connected.
+	/* the approach for DFS does not work for BFS since the leafs in the tree can be connected.
 	 * we choose every other node in the BFS-tree to be part of VC.
 	 * The root is part of VC.
-	 * If a node should not part of VC but it has a neighbor which is also not part we make that node part of VC.
+	 * If a node should not be part of VC but it has a neighbor which is also not part we make that node part of VC.
 	 */
 	public int solve(Graph g){
 		res = new ArrayList<Vertex>();
+		//take every other node in the tree
 		BFS(g);
+		//complete VC
 		makeValidVC();
+		//reset visit markers
 		g.reset();
 		return res.size();
 	}
@@ -38,33 +41,8 @@ public class VCviaBFS {
 		root.visited = true;
 		res.add(root);
 		
-		while(!queue.isEmpty()){
-			Vertex v = queue.poll();
-			if(currentdist == v.dist){
-				for(Vertex w: v.adj()){
-					if(!w.visited){
-						w.visited = true;
-						queue.add(w);	
-						w.dist = currentdist + 1;
-						if((w.dist % 2) == 0){
-							res.add(w);
-						}
-					}
-				}
-			}
-			if(currentdist < v.dist){
-				currentdist = currentdist +1;
-				for(Vertex w: v.adj()){
-					if(!w.visited){
-						w.visited = true;
-						queue.add(w);	
-						w.dist = currentdist + 1;
-						if((w.dist % 2) == 0){
-							res.add(w);
-						}
-					}
-				}
-			}
+		while(!(queue.isEmpty() && allVisited())){
+			//global controle for disconnected graphs
 			if(queue.isEmpty() && !allVisited()){
 				for(Vertex w: verts){
 					if(!w.visited){
@@ -72,10 +50,25 @@ public class VCviaBFS {
 						w.visited = true;
 						res.add(w);
 						currentdist = 0;
-						break;
 					}
 				}
 				
+			} else {
+				Vertex v = queue.poll();
+				//check if we get to another height level
+				if(currentdist < v.dist){
+					currentdist = currentdist +1;
+				}
+				for(Vertex w: v.adj()){
+					if(!w.visited){
+						w.visited = true;
+						queue.add(w);	
+						w.dist = currentdist + 1;
+						if((w.dist % 2) == 0){
+							res.add(w);
+						}
+					}
+				}
 			}
 		}
 	}
@@ -89,7 +82,8 @@ public class VCviaBFS {
 		}
 		return res;
 	}
-
+	
+	//adds nodes to form a valid VC	
 	private void makeValidVC(){
 		for(Vertex v: res){
 			verts.remove(v);
